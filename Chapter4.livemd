@@ -1,0 +1,135 @@
+# Ch. 4: Elixir Basics
+
+## Integers
+
+Decimal numbers may contain underscores
+
+```elixir
+1_000_000 == 1_000_000
+```
+
+## Ranges
+
+Ranges are represented as `start..end`
+
+```elixir
+some_range = 1..100
+some_range
+```
+
+## PIDs and Ports
+
+PID is a reference to a local or remote process. A new PID is created when a new process is spawned
+
+Port is a reference to a resource that you perform I/O on
+
+```elixir
+this_pid = self()
+this_pid
+```
+
+## Tuples
+
+Tuples are an __ordered__ collection of values
+
+```elixir
+t = {1, 2}
+t
+```
+
+Tuples can be used in pattern matching
+
+```elixir
+{first, second} = t
+```
+
+```elixir
+second
+```
+
+```elixir
+Tuple.insert_at(t, 0, 23)
+```
+
+```elixir
+Tuple.delete_at(t, 0)
+```
+
+```elixir
+Tuple.sum(t)
+```
+
+```elixir
+Tuple.append(t, 7)
+```
+
+## Lists
+
+* Lists are not like arrays in other languages but rather a linked data structure
+* A list may either be empty of consist of a head and tail
+* The head contains a value and the tail is itself a list
+  * Similar to LISP in a way
+* Fast traversal
+* Slow access
+
+```elixir
+# Concatenation
+[1, 2, 3] ++ [4, 5, 6]
+```
+
+```elixir
+# Difference
+[1, 2, 3, 4] -- [2, 4]
+```
+
+```elixir
+# Membership
+1 in [3, 4, 5]
+```
+
+Keyword lists
+
+```elixir
+[name: "Charlie", city: "Gothenburg", likes: "Programming"]
+```
+
+## Maps
+
+Collection of key/value pairs
+
+`%{key => value, key => value}`
+
+```elixir
+charlie = %{"name" => "Charlie", "age" => 25}
+```
+
+```elixir
+charlie["name"]
+```
+
+```elixir
+another_map = %{:foo => "bar", :biz => "baz"}
+another_map[:foo] == another_map.foo
+```
+
+<!-- livebook:{"livebook_object":"cell_input","name":"input","type":"text","value":"asdf"} -->
+
+## with expression
+
+1. Allows you to define a local scope for variables
+2. Gives you control over pattern-matching failures
+
+```elixir
+content = "Now is the time"
+
+lp =
+  with {:ok, file} = File.open("/etc/passwd"),
+       content = IO.read(file, :all),
+       :ok = File.close(file),
+       [_, uid, gid] = Regex.run(~r/^_lp:.*?:(\d+):(\d+)/m, content) do
+    "Group: #{gid}, User: #{uid}"
+  end
+
+IO.puts(lp)
+IO.puts(content)
+```
