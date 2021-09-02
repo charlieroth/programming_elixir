@@ -1,7 +1,113 @@
 # Chapter 5: Anonymous Functions
 
-## asdf
+## Anonymous Functions
+
+An anonymous function is created using the `fn` keyword
 
 ```elixir
-a = 1 + 1
+sum_of_two = fn a, b -> a + b end
+sum_of_two.(1, 2)
+```
+
+#### Exercise 1: Functions
+
+Create functions that do the following:
+
+`list_concat.([:a, :b], [:c, :d]) #=> [:a, :b, :c, :d]`
+
+`sum.(1, 2, 3) #=> 6`
+
+`pair_tuple_to_list.({1234, 5678}) #=> [1234, 5678]`
+
+```elixir
+list_concat = fn x, y -> x ++ y end
+list_concat.([:a, :b], [:c, :d]) == [:a, :b, :c, :d]
+```
+
+```elixir
+sum = fn x, y, z -> x + y + z end
+sum.(1, 2, 3) == 6
+```
+
+```elixir
+pair_tuple_to_list = fn t -> Tuple.to_list(t) end
+pair_tuple_to_list.({1234, 5678}) == [1234, 5678]
+```
+
+## One Function, Multiple Bodies
+
+A single function definition lets you define different implementations, depending on the type and contents of the arguments passed
+
+```elixir
+handle_open = fn
+  {:ok, file} -> "Read data: #{IO.read(file, :line)}"
+  {_, error} -> "Error: #{:file.format_error(error)}"
+end
+```
+
+```elixir
+known_path = "/Users/charlie/Code/ProgrammingElixir/Chapter4.livemd"
+handle_open.(File.open(known_path))
+```
+
+```elixir
+unknown_path = "nonexistent"
+handle_open.(File.open(unknown_path))
+```
+
+#### Exercise 2: Functions
+
+Write a function that takes three arguments
+
+If the first two are zero, return “FizzBuzz”
+
+If the first is zero, return “Fizz"
+
+If the second is zero, return “Buzz”
+
+Otherwise return the third argument
+
+Do not use any language features that we haven’t yet covered in this book
+
+```elixir
+fizz_buzz = fn
+  {0, 0, _} -> "FizzBuzz"
+  {0, _, _} -> "Fizz"
+  {_, 0, _} -> "Buzz"
+  {_, _, z} -> z
+end
+```
+
+```elixir
+fizz_buzz.({0, 0, 23}) == "FizzBuzz"
+```
+
+```elixir
+fizz_buzz.({0, 12, 34}) == "Fizz"
+```
+
+```elixir
+fizz_buzz.({12, 0, 34}) == "Buzz"
+```
+
+```elixir
+fizz_buzz.({12, 34, 56}) == 56
+```
+
+#### Exercise 3: Functions
+
+The operator rem(a, b) returns the remainder after dividing a by b
+
+Write a function that takes a single integer (n) and calls the function in the previous exercise, passing it rem(n,3), rem(n,5), and n
+
+Call it seven times with the arguments 10, 11, 12, and so on
+
+You should get “Buzz, 11, Fizz, 13, 14, FizzBuzz, 16.”
+
+```elixir
+rem_fizz_buzz = fn n ->
+  fizz_buzz.({rem(n, 3), rem(n, 5), n})
+end
+
+Enum.map([10, 11, 12, 13, 14, 15, 16], rem_fizz_buzz)
 ```
