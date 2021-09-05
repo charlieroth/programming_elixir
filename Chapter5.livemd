@@ -111,3 +111,49 @@ end
 
 Enum.map([10, 11, 12, 13, 14, 15, 16], rem_fizz_buzz)
 ```
+
+## Pinned Values and Function Parameters
+
+The pin `^` operator allows you to use the current value of a variable in a pattern. This can be used in function parameters too
+
+```elixir
+defmodule Greeter do
+  def for(name, greeting) do
+    fn
+      ^name -> "#{greeting} #{name}"
+      _ -> "I don't know you"
+    end
+  end
+end
+
+mr_roth = Greeter.for("Charlie", "Hej, hej!")
+IO.puts(mr_roth.("Charlie"))
+IO.puts(mr_roth.("Miranda"))
+```
+
+## The & Notation
+
+Short helper functions can be created using the `&` notation
+
+The `&` operator converts the expression that follows into a function
+
+Inside the function the placeholders `&1`, `&2`, etc., correspond to the first, second, etc., parameters of the function
+
+The `&` operator provides a nice way to pass functions to other functions
+
+```elixir
+add_one = &(&1 + 1)
+add_one.(3)
+```
+
+```elixir
+Enum.map([1, 2, 3, 4], &(&1 * 2))
+```
+
+## Functions Are the Core
+
+The basis of Elixir programming is transforming data
+
+Functions are the engines that perform that transformation
+
+Functions are the core of Elixir
