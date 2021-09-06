@@ -1,7 +1,219 @@
 # Chapter 6: Modules and Named Functions
 
-## Placeholder
+## A Module
+
+In Elixir named functions *must* be written inside modules
 
 ```elixir
+defmodule Times do
+  def double(n) do
+    n * 2
+  end
+end
+```
 
+```elixir
+Times.double(4)
+```
+
+```elixir
+Times.double("charlie")
+```
+
+A named function is identified by both its name and its number of parameters or *arity*
+
+Elixir displays the *arity* of a function like `Times.double/1`
+
+## Function Calls and Pattern Matching
+
+The same function written multiple times, with the same arity, in a module will cause a pattern matching effect to occur when calling the function
+
+```elixir
+defmodule Factorial do
+  def of(0), do: 1
+  def of(n), do: n * of(n - 1)
+end
+```
+
+```elixir
+Factorial.of(10)
+```
+
+```elixir
+Factorial.of(0)
+```
+
+## Guard Clauses
+
+In addition to pattern matching on the a same named & arity function, a guard clause can also be used to distinguish which version of the function should be called.
+
+```elixir
+defmodule Guard do
+  def what_is(x) when is_number(x) do
+    IO.puts("#{x} is a number")
+  end
+
+  def what_is(x) when is_list(x) do
+    IO.puts("#{inspect(x)} is a list")
+  end
+
+  def what_is(x) when is_atom(x) do
+    IO.puts("#{x} is an atom")
+  end
+end
+
+Guard.what_is(42)
+Guard.what_is([42, 69])
+Guard.what_is(:cat)
+```
+
+## Default Parameters
+
+A default value can be given to a parameter using the syntax `param \\ value`
+
+```elixir
+defmodule DefaultParams do
+  def func(p1, p2 \\ 3) do
+    IO.inspect([p1, p2])
+  end
+
+  def func_two(p1, p2 \\ 3, p3) do
+    IO.inspect([p1, p2, p3])
+  end
+end
+
+DefaultParams.func(2)
+DefaultParams.func(2, 4)
+DefaultParams.func_two(2, 4)
+```
+
+## Private Functions
+
+The `defp` macro defines a private function in a module
+
+```elixir
+defmodule Priv do
+  def pub do
+    IO.puts(priv())
+  end
+
+  defp priv do
+    "007 Charlie"
+  end
+end
+
+Priv.pub()
+# throws an error
+Priv.priv()
+```
+
+## Pipe Operator: |>
+
+The `|>` operator takes the result of the expression to its left and inserts it as the first param of the function invocation to its right
+
+Parantheses should always be used around function parameters in pipelines
+
+```elixir
+1..10
+|> Enum.map(&(&1 * 2))
+|> Enum.filter(&(&1 < 10))
+```
+
+```elixir
+1..10
+|> Enum.filter(&(&1 > 5))
+|> Enum.map(&(&1 * 2))
+```
+
+## Modules
+
+Provide namespaces for functions, macros, structs, protocols and other modules
+
+Modules can be named like `Mix.Tasks.DocTest` which give the illusion that nested modules exist but all modlues are named at the top level
+
+```elixir
+defmodule Outer do
+  defmodule Inner do
+    def inner_func do
+    end
+  end
+
+  def outer_func do
+  end
+end
+```
+
+## Module Directives
+
+The `import` directive brings a module's functions and/or macros into the current scope
+
+Can be used to cut down the clutter of source files by eliminating the need to repeat the module name multiple times
+
+```elixir
+defmodule ImportDirective do
+  def func1 do
+    List.flatten([1, [2, [3, 4]]])
+  end
+
+  def func2 do
+    import List, only: [flatten: 1]
+    flatten([5, [6, [7, 8]]])
+  end
+end
+```
+
+```elixir
+ImportDirective.func1()
+```
+
+```elixir
+ImportDirective.func2()
+```
+
+The `alias` directive creates an alias for a module
+
+```elixir
+defmodule AliasDirective do
+  def func1(source) do
+    alias My.Other.Module.Parser, as: Parser
+    alias My.Other.Module.Runner, as: Runner
+
+    source
+    |> Parser.parse()
+    |> Runner.execute()
+  end
+
+  def func2(source) do
+    alias My.Other.Module.{Parser, Runner}
+
+    source
+    |> Parser.parse()
+    |> Runner.execute()
+  end
+end
+```
+
+The `require` directive allows you to use any macros it defines. This ensures macro definitions are available when your code is compiled
+
+## Module Attributes
+
+Modules have associated metadata called *attributes* and are defined by a name
+
+Attributes are defined using the syntax `@name`
+
+Attributes are accessed using the same syntax `@name`
+
+Attributes can only be defined at the top level of a module
+
+In other programming languages, the concept of a `constant` is similar
+
+```elixir
+defmodule ModuleAttr do
+  @author "Charlie"
+  def get_author do
+    @author
+  end
+end
+
+ModuleAttr.get_author()
 ```

@@ -1,0 +1,19 @@
+# Chapter 7: Lists and Recursion
+
+## Heads and Tails
+
+```elixir
+
+```
+
+## Process a List
+
+## Build a List
+
+## Map Function
+
+## Reducing a List
+
+## Complex List Patterns
+
+## List Module
