@@ -2,18 +2,70 @@
 
 ## Heads and Tails
 
-```elixir
+A list is either empty or consists of a head and a tail
 
+The head contains a value and the tail is itself a list
+
+This is a recursive definition
+
+```elixir
+# empty list
+[]
 ```
 
-## Process a List
-
-## Build a List
-
-## Map Function
-
-## Reducing a List
-
-## Complex List Patterns
+```elixir
+a = [1, 2, 3]
+[head | tail] = a
+[head, tail]
+```
 
 ## List Module
+
+```elixir
+# Concatenation
+[1, 2, 3] ++ [4, 5, 6]
+```
+
+```elixir
+# Flatten
+List.flatten([[1, [2, 3, [4, 5]]], 6])
+```
+
+```elixir
+# Fold (like reduce, but can choose direction)
+l = List.foldl([1, 2, 3], "", fn value, acc -> "#{value}(#{acc})" end)
+r = List.foldr([1, 2, 3], "", fn value, acc -> "#{value}(#{acc})" end)
+IO.puts(l)
+IO.puts(r)
+```
+
+```elixir
+# Replace
+List.replace_at([1, 2, 3], 2, 42)
+```
+
+```elixir
+# Tuple access within lists
+List.keyfind(
+  [{:name, "Charlie"}, {:likes, "Programming"}, {:where, "Gothenburg", "SE"}],
+  "Programming",
+  1
+)
+```
+
+```elixir
+List.keydelete(
+  [{:name, "Charlie"}, {:likes, "Programming"}, {:where, "Gothenburg", "SE"}],
+  "Programming",
+  1
+)
+```
+
+```elixir
+List.keyreplace(
+  [{:name, "Charlie"}, {:likes, "Programming"}, {:where, "Gothenburg", "SE"}],
+  :name,
+  0,
+  {:first_name, "Charlie"}
+)
+```

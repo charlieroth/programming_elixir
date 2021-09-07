@@ -1,0 +1,107 @@
+# Chapter 8: Maps, Keyword Lists, Sets, and Structs
+
+## Choosing a Data Structure
+
+A `dictionary` is a data type that associates keys with values
+
+If you want to pattern match against the contents, use a `Map`
+
+If you want more than one entry with the same key, use the `Keyword` module
+
+If you want the order of the elements guarenteed, use the `Keyword` module
+
+If you have a fixed set of fields (a data structure that stays the same), use a `struct`
+
+Otherwise, use a `Map`
+
+## Keyword Lists
+
+Are typically used in the context of options passed to functions
+
+```elixir
+defmodule PersonGetter do
+  @defaults [name: "Charlie", age: 25, height: 190]
+
+  def print_person(location, options \\ []) do
+    options = Keyword.merge(@defaults, options)
+    IO.puts("Located at: #{location}")
+    IO.puts("Name: #{options[:name]}")
+    IO.puts("Age: #{options[:age]}")
+    IO.puts("Height in cm: #{options[:height]}")
+  end
+end
+
+PersonGetter.print_person("Gothenburg, Sweden")
+```
+
+## Maps
+
+Go-to `key/value` data structure in Elixir
+
+```elixir
+charlie_map = %{name: "Charlie", age: 25, likes: "Programming"}
+```
+
+```elixir
+Map.keys(charlie_map)
+```
+
+```elixir
+Map.values(charlie_map)
+```
+
+```elixir
+charlie_map[:name] == charlie_map.name
+```
+
+```elixir
+Map.drop(charlie_map, [:likes])
+```
+
+```elixir
+Map.put(charlie_map, :hair_color, "Brown")
+```
+
+```elixir
+Map.has_key?(charlie_map, :weight)
+```
+
+```elixir
+Map.pop(charlie_map, :likes)
+```
+
+## Pattern Matching and Updating Maps
+
+Can use a combination of destructing and pattern matching to filter a map's entries
+
+```elixir
+data = %{name: "Charlie", state: "MI", likes: "Elixir"}
+
+for key <- [:name, :likes] do
+  %{^key => value} = data
+  value
+end
+```
+
+## Updating a Map
+
+A simple way to update a map is to use the follow syntax
+
+`new_map = %{old_map | key => value, ...}`
+
+To update a key in a map, you must use `Map.put_new/3`
+
+```elixir
+m = %{a: 1, b: 2, c: 3}
+IO.inspect(m)
+m1 = %{m | b: "two", c: "three"}
+IO.inspect(m1)
+m2 = %{m1 | a: "one"}
+IO.inspect(m2)
+```
+
+## Structs
+
+## Nested Dictionary Structures
+
+## Sets
