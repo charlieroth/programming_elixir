@@ -1,18 +1,142 @@
 # Chapter 10: Processing Collections - Enum and Stream
 
+## Intro
+
+The `Enum` module is the main use case for iterating over collections
+
+The `Stream` module is used to iterate over collections lazily, meaning the next value is calculated only when it is needed
+
 ## Enum -- Processing Collections
 
 ```elixir
+list = Enum.to_list(1..5)
+```
 
+```elixir
+Enum.concat([1, 2, 3], [4, 5, 6])
+```
+
+```elixir
+Enum.map(list, &(&1 * 2))
+```
+
+```elixir
+Enum.map(list, &String.duplicate("*", &1))
+```
+
+```elixir
+Enum.at(10..20, 3)
+```
+
+```elixir
+Enum.at(10..20, 30, :default_value)
+```
+
+```elixir
+require Integer
+```
+
+```elixir
+Enum.filter(list, &Integer.is_even/1)
+```
+
+```elixir
+Enum.reject(list, &Integer.is_even/1)
+```
+
+```elixir
+Enum.sort(["there", "was", "a", "crooked", "man"])
+```
+
+```elixir
+Enum.max(["there", "was", "a", "crooked", "man"])
+```
+
+```elixir
+Enum.max_by(["there", "was", "a", "crooked", "man"], &String.length/1)
+```
+
+```elixir
+Enum.take(list, 3)
+```
+
+```elixir
+Enum.take_every(list, 2)
+```
+
+```elixir
+Enum.take_while(list, &(&1 < 4))
+```
+
+```elixir
+Enum.join(list)
+```
+
+```elixir
+Enum.join(list, ", ")
+```
+
+```elixir
+Enum.all?(list, &(&1 < 4))
+```
+
+```elixir
+Enum.any?(list, &(&1 < 4))
+```
+
+```elixir
+Enum.member?(list, 4)
+```
+
+```elixir
+Enum.empty?(list)
+```
+
+```elixir
+Enum.zip(list, [:a, :b, :c])
+```
+
+```elixir
+Enum.reduce(1..100, &(&1 + &2))
+```
+
+```elixir
+Enum.reduce(["now", "is", "the", "time"], fn word, longest ->
+  if String.length(word) > String.length(longest) do
+    word
+  else
+    longests
+  end
+end)
 ```
 
 ## Streams -- Lazy Enumerables
 
 ```elixir
-
+s = Stream.map([1, 3, 5, 7], &(&1 + 1))
 ```
 
-## The Collectable Protocol
+Streams are a composable enumerator that returns a `Stream` value that contains a spec of what we intended
+
+To get the results from the `Stream`, treat it as a collection and pass it to a function in the `Enum` module
+
+```elixir
+Enum.to_list(s)
+```
+
+Because a `Stream` is enumerable, you can pass a stream to a stream function, meaning that streams are composable
+
+```elixir
+[1, 2, 3, 4]
+|> Stream.map(&(&1 * &1))
+|> Stream.map(&(&1 + 1))
+|> Stream.filter(fn x -> rem(x, 2) == 1 end)
+|> Enum.to_list()
+```
+
+This series of piped `Stream`s are never creating intermediate lists, just passing successive elements of each of the collections to the next in the chain
+
+Chained `Stream`s are represented as a list of functions, each of which is applied in turn to each element of the stream as it is processed
 
 ```elixir
 
@@ -20,6 +144,20 @@
 
 ## Comprehensions
 
-```elixir
+The idea of comprehensions: given one or more collections, extract all combinations of values from each, optionally filter the values, and then generate a new collection useing the values that remain
 
+```elixir
+for x <- [1, 2, 3, 4, 5], do: x * x
+```
+
+```elixir
+for x <- [1, 2, 3, 4, 5], x < 4, do: x * x
+```
+
+```elixir
+for x <- [1, 2], y <- [3, 4], do: x * y
+```
+
+```elixir
+for x <- [1, 2], y <- [3, 4], do: {x, y}
 ```
