@@ -102,6 +102,60 @@ IO.inspect(m2)
 
 ## Structs
 
-## Nested Dictionary Structures
+A struct is a module that wraps a limited form of `Map`
 
-## Sets
+It is limited because the keys must be atoms and these amps don't have `Dict` capabilities
+
+```elixir
+defmodule Subscriber do
+  defstruct name: "", paid: false, over_18: true
+end
+```
+
+```elixir
+s1 = %Subscriber{}
+```
+
+```elixir
+s2 = %Subscriber{name: "Charlie"}
+```
+
+```elixir
+s3 = %Subscriber{name: "Miranda", over_18: true}
+```
+
+```elixir
+[s1.name, s2.name, s3.name]
+```
+
+Structs are wrapped in a module so you can add struct-specific behavior
+
+```elixir
+defmodule Attendee do
+  defstruct name: "", paid: false, over_18: false
+
+  def may_attend_party(attendee = %Attendee{}) do
+    attendee.paid && attendee.over_18
+  end
+
+  def print_vip_badge(%Attendee{name: name}) when name != "" do
+    IO.puts("VIP: #{name}")
+  end
+
+  def print_vip_badge(%Attendee{}) do
+    raise("Missing name for badge")
+  end
+end
+```
+
+```elixir
+a1 = %Attendee{name: "Charlie", over_18: true, paid: true}
+```
+
+```elixir
+Attendee.may_attend_party(a1)
+```
+
+```elixir
+Attendee.print_vip_badge(a1)
+```
